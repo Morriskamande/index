@@ -47,10 +47,6 @@
             <span class="font-medium tracking-wide">Official Republic Digital Citizen Portal</span>
         </div>
         <div class="flex items-center space-x-4">
-            <button id="docToggleBtn" onclick="toggleDocs()" class="hover:underline flex items-center gap-1 text-slate-300 hover:text-white transition">
-                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Documentation & Guide
-            </button>
-            <span class="text-slate-500">|</span>
             <span class="text-slate-300">Murang'a County Helpline: <strong>+254 757 562 988-MURANGA-GOV</strong></span>
         </div>
     </div>
@@ -463,15 +459,44 @@
     <script>
         lucide.createIcons();
 
-        let registeredUsers = [
-            { name: 'John Kamau', id: '28491032', phone: '0711223344', password: 'citizen123' }
-        ];
+        // Helper functions for LocalStorage management
+        function getStoredUsers() {
+            try {
+                const data = localStorage.getItem('muranga_users');
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                return [];
+            }
+        }
 
-        let requestsData = [
-            { id: 'MRG-8291', date: '2026-10-18', citizen: 'John Kamau (ID: 28491032 | Tel: 0711223344)', category: 'Streetlight', location: 'Kiharu Ward, Murang\'a', urgency: 'High', status: 'Pending', description: 'Transformer junction lights broken for over a week causing security risks at night.', department: 'Electrical Works' },
-            { id: 'MRG-7102', date: '2026-10-17', citizen: 'Grace Wanjiru (ID: 29102391 | Tel: 0722334455)', category: 'Water & Sanitation', location: 'Maragua Town', urgency: 'Medium', status: 'In Progress', description: 'Main pipe leakage near market stalls leading to water wastage.', department: 'Water Services' },
-            { id: 'MRG-5510', date: '2026-10-15', citizen: 'Peter Njoroge (ID: 21983021 | Tel: 0733445566)', category: 'Road Damage', location: 'Kangema Market Road', urgency: 'High', status: 'Resolved', description: 'Large pothole repaired near bus park.', department: 'Roads & Civil Works' }
-        ];
+        function getStoredRequests() {
+            try {
+                const data = localStorage.getItem('muranga_requests');
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // Initialize LocalStorage Data if not present
+        if (!localStorage.getItem('muranga_users')) {
+            const defaultUsers = [
+                { name: 'John Kamau', id: '28491032', phone: '0711223344', password: 'citizen123' }
+            ];
+            localStorage.setItem('muranga_users', JSON.stringify(defaultUsers));
+        }
+
+        if (!localStorage.getItem('muranga_requests')) {
+            const defaultRequests = [
+                { id: 'MRG-8291', date: '2026-10-18', citizen: 'John Kamau (ID: 28491032 | Tel: 0711223344)', category: 'Streetlight', location: "Kiharu Ward, Murang'a", urgency: 'High', status: 'Pending', description: 'Transformer junction lights broken for over a week causing security risks at night.', department: 'Electrical Works' },
+                { id: 'MRG-7102', date: '2026-10-17', citizen: 'Grace Wanjiru (ID: 29102391 | Tel: 0722334455)', category: 'Water & Sanitation', location: 'Maragua Town', urgency: 'Medium', status: 'In Progress', description: 'Main pipe leakage near market stalls leading to water wastage.', department: 'Water Services' },
+                { id: 'MRG-5510', date: '2026-10-15', citizen: 'Peter Njoroge (ID: 21983021 | Tel: 0733445566)', category: 'Road Damage', location: 'Kangema Market Road', urgency: 'High', status: 'Resolved', description: 'Large pothole repaired near bus park.', department: 'Roads & Civil Works' }
+            ];
+            localStorage.setItem('muranga_requests', JSON.stringify(defaultRequests));
+        }
+
+        let registeredUsers = getStoredUsers();
+        let requestsData = getStoredRequests();
 
         let currentUser = null;
         let statusChartInstance = null;
@@ -487,247 +512,113 @@
             }
         }
 
-        function handleSignupSubmit(event) {
-            event.preventDefault();
-            const name = document.getElementById('signupName').value;
-            const id = document.getElementById('signupId').value;
-            const phone = document.getElementById('signupPhone').value;
-            const password = document.getElementById('signupPassword').value;
-
-            if (registeredUsers.some(u => u.id === id)) {
-                alert('An account with this National ID already exists!');
-                return;
-            }
-
-            registeredUsers.push({ name, id, phone, password });
-            
-            const successDiv = document.getElementById('signupSuccess');
-            successDiv.classList.remove('hidden');
-
-            setTimeout(() => {
-                successDiv.classList.add('hidden');
-                toggleAuthView('login');
-                document.getElementById('loginRole').value = 'citizen';
-                document.getElementById('loginUsername').value = id;
-                document.getElementById('loginPassword').value = password;
-            }, 1500);
-        }
-
-        function fillCredentials(role) {
-            if (role === 'citizen') {
+        function fillCredentials(type) {
+            if (type === 'citizen') {
                 document.getElementById('loginRole').value = 'citizen';
                 document.getElementById('loginUsername').value = '28491032';
                 document.getElementById('loginPassword').value = 'citizen123';
-            } else if (role === 'admin') {
+            } else {
                 document.getElementById('loginRole').value = 'admin';
                 document.getElementById('loginUsername').value = 'ADMIN-001';
                 document.getElementById('loginPassword').value = 'admin123';
             }
         }
 
+        function handleSignupSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('signupName').value.trim();
+            const id = document.getElementById('signupId').value.trim().toString();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+
+            registeredUsers = getStoredUsers();
+
+            const existing = registeredUsers.find(u => String(u.id).trim() === id);
+            if (existing) {
+                alert('A user with National ID ' + id + ' is already registered. Please login directly.');
+                toggleAuthView('login');
+                document.getElementById('loginRole').value = 'citizen';
+                document.getElementById('loginUsername').value = id;
+                return;
+            }
+
+            const newUser = { name, id, phone, password };
+            registeredUsers.push(newUser);
+            localStorage.setItem('muranga_users', JSON.stringify(registeredUsers));
+
+            document.getElementById('signupSuccess').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('signupSuccess').classList.add('hidden');
+                toggleAuthView('login');
+                document.getElementById('loginRole').value = 'citizen';
+                document.getElementById('loginUsername').value = id;
+                document.getElementById('loginPassword').value = password;
+                alert('Account registered successfully! Click "Sign In to Portal" to log in.');
+            }, 800);
+        }
+
         function handleLoginSubmit(event) {
             event.preventDefault();
             const role = document.getElementById('loginRole').value;
-            const userVal = document.getElementById('loginUsername').value;
-            const pass = document.getElementById('loginPassword').value;
-            const errorDiv = document.getElementById('loginError');
+            const username = document.getElementById('loginUsername').value.trim().toString();
+            const password = document.getElementById('loginPassword').value.trim();
 
-            let isValid = false;
+            let authenticated = false;
 
-            if (role === 'admin' && userVal === 'ADMIN-001' && pass === 'admin123') {
-                currentUser = { name: 'County Administrator', id: 'ADMIN-001', role: 'admin' };
-                isValid = true;
-            } else if (role === 'citizen') {
-                const foundUser = registeredUsers.find(u => u.id === userVal && u.password === pass);
+            if (role === 'admin') {
+                if (username === 'ADMIN-001' && password === 'admin123') {
+                    currentUser = { name: 'County Administrator', role: 'admin', id: 'ADMIN-001' };
+                    authenticated = true;
+                }
+            } else {
+                registeredUsers = getStoredUsers();
+                const foundUser = registeredUsers.find(u => 
+                    String(u.id).trim().toLowerCase() === username.toLowerCase() && 
+                    String(u.password).trim() === password
+                );
+
                 if (foundUser) {
-                    currentUser = { ...foundUser, role: 'citizen' };
-                    isValid = true;
+                    currentUser = { 
+                        name: foundUser.name, 
+                        role: 'citizen', 
+                        id: foundUser.id, 
+                        phone: foundUser.phone 
+                    };
+                    authenticated = true;
                 }
             }
 
-            if (isValid) {
-                errorDiv.classList.add('hidden');
-                
-                document.getElementById('userNameDisplay').innerText = currentUser.name;
-                document.getElementById('userRoleDisplay').innerText = currentUser.role === 'citizen' ? `ID: ${currentUser.id}` : 'System Admin';
-                document.getElementById('userAvatar').innerText = currentUser.role === 'citizen' ? currentUser.name.split(' ').map(n=>n[0]).join('') : 'AD';
-                
-                document.getElementById('currentUserBadge').classList.remove('hidden');
-                document.getElementById('logoutBtn').classList.remove('hidden');
+            if (authenticated) {
+                document.getElementById('loginError').classList.add('hidden');
                 document.getElementById('loginContainer').classList.add('hidden');
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('currentUserBadge').classList.remove('hidden');
+                
+                document.getElementById('userNameDisplay').textContent = currentUser.name;
+                document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? 'County Administrator' : `Citizen ID: ${currentUser.id}`;
+                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
 
-                if (currentUser.role === 'citizen') {
+                if (currentUser.role === 'admin') {
+                    document.getElementById('adminView').classList.remove('hidden');
+                    initAdminDashboard();
+                } else {
                     document.getElementById('citizenView').classList.remove('hidden');
                     renderCitizenRequests();
-                } else {
-                    document.getElementById('adminView').classList.remove('hidden');
-                    renderAdminRequests();
-                    updateAdminAnalytics();
                 }
             } else {
-                errorDiv.classList.remove('hidden');
+                document.getElementById('loginError').classList.remove('hidden');
+                document.getElementById('loginErrorText').textContent = 'Invalid ID/Username or Password.';
             }
         }
 
         function handleLogout() {
             currentUser = null;
-            document.getElementById('citizenView').classList.add('hidden');
-            document.getElementById('adminView').classList.add('hidden');
-            document.getElementById('currentUserBadge').classList.add('hidden');
             document.getElementById('logoutBtn').classList.add('hidden');
+            document.getElementById('currentUserBadge').classList.add('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('citizenView').classList.add('hidden');
             document.getElementById('loginContainer').classList.remove('hidden');
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-        }
-
-        function renderCitizenRequests() {
-            const list = document.getElementById('citizenRequestList');
-            const myReqs = requestsData.filter(r => r.citizen.includes(currentUser.id));
-            
-            if (myReqs.length === 0) {
-                list.innerHTML = `<p class="p-4 text-slate-400 text-center">You have not submitted any service requests yet.</p>`;
-                return;
-            }
-
-            list.innerHTML = myReqs.map(r => {
-                let badgeClass = 'bg-amber-100 text-amber-800';
-                if (r.status === 'In Progress') badgeClass = 'bg-blue-100 text-blue-800';
-                if (r.status === 'Resolved') badgeClass = 'bg-emerald-100 text-emerald-800';
-                if (r.status === 'Rejected') badgeClass = 'bg-rose-100 text-rose-800';
-
-                return `
-                <div class="p-3 flex justify-between items-center text-xs">
-                    <div>
-                        <p class="font-bold text-gov-navy">${r.category} - ${r.location}</p>
-                        <p class="text-slate-500">${r.description}</p>
-                    </div>
-                    <span class="px-2 py-1 rounded font-semibold ${badgeClass}">${r.status}</span>
-                </div>`;
-            }).join('');
-        }
-
-        function renderAdminRequests() {
-            const tbody = document.getElementById('adminTableBody');
-            tbody.innerHTML = requestsData.map((r, index) => {
-                let badgeClass = 'bg-amber-100 text-amber-800';
-                if (r.status === 'In Progress') badgeClass = 'bg-blue-100 text-blue-800';
-                if (r.status === 'Resolved') badgeClass = 'bg-emerald-100 text-emerald-800';
-                if (r.status === 'Rejected') badgeClass = 'bg-rose-100 text-rose-800';
-
-                return `
-                <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3 font-semibold">${r.id}<br><span class="text-[10px] text-slate-400">${r.date}</span></td>
-                    <td class="p-3 font-medium text-slate-900">${r.citizen}</td>
-                    <td class="p-3">${r.category}</td>
-                    <td class="p-3">${r.location}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 bg-rose-100 text-rose-700 rounded">${r.urgency}</span></td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded font-bold ${badgeClass}">${r.status}</span></td>
-                    <td class="p-3 text-right flex justify-end gap-1.5">
-                        <button onclick="openTriageModal(${index})" class="px-2.5 py-1 bg-gov-gold text-gov-navy font-bold rounded hover:bg-gov-goldHover flex items-center gap-1"><i data-lucide="wrench" class="w-3 h-3"></i> Triage</button>
-                        <button onclick="viewFullSubmission(${index})" class="px-2.5 py-1 bg-gov-navy text-white rounded hover:bg-gov-navyLight">Details</button>
-                    </td>
-                </tr>`;
-            }).join('');
-            lucide.createIcons();
-        }
-
-        function openTriageModal(index) {
-            const r = requestsData[index];
-            document.getElementById('triageTicketIndex').value = index;
-            document.getElementById('triageTicketId').value = r.id;
-            document.getElementById('triageStatusSelect').value = r.status;
-            document.getElementById('triageDepartmentSelect').value = r.department || 'Electrical Works';
-            document.getElementById('adminTriageModal').classList.remove('hidden');
-        }
-
-        function closeAdminTriageModal() {
-            document.getElementById('adminTriageModal').classList.add('hidden');
-        }
-
-        function handleTriageSubmit(e) {
-            e.preventDefault();
-            const index = document.getElementById('triageTicketIndex').value;
-            const newStatus = document.getElementById('triageStatusSelect').value;
-            const newDept = document.getElementById('triageDepartmentSelect').value;
-
-            requestsData[index].status = newStatus;
-            requestsData[index].department = newDept;
-
-            closeAdminTriageModal();
-            renderAdminRequests();
-            updateAdminAnalytics();
-        }
-
-        function updateAdminAnalytics() {
-            const total = requestsData.length;
-            const pending = requestsData.filter(r => r.status === 'Pending').length;
-            const inProgress = requestsData.filter(r => r.status === 'In Progress').length;
-            const resolved = requestsData.filter(r => r.status === 'Resolved').length;
-
-            document.getElementById('kpiTotal').innerText = total;
-            document.getElementById('kpiPending').innerText = pending;
-            document.getElementById('kpiInProgress').innerText = inProgress;
-            document.getElementById('kpiResolved').innerText = resolved;
-
-            // Render Charts
-            const ctx1 = document.getElementById('statusChart').getContext('2d');
-            if (statusChartInstance) statusChartInstance.destroy();
-            statusChartInstance = new Chart(ctx1, {
-                type: 'bar',
-                data: {
-                    labels: ['Pending Triage', 'In Progress', 'Resolved'],
-                    datasets: [{
-                        label: 'Cases',
-                        data: [pending, inProgress, resolved],
-                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981']
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-
-            const ctx2 = document.getElementById('categoryChart').getContext('2d');
-            if (categoryChartInstance) categoryChartInstance.destroy();
-
-            const categories = ['Streetlight', 'Water & Sanitation', 'Garbage Collection', 'Road Damage', 'Public Health'];
-            const counts = categories.map(cat => requestsData.filter(r => r.category === cat).length);
-
-            categoryChartInstance = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: categories,
-                    datasets: [{
-                        data: counts,
-                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444', '#8b5cf6']
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-
-            document.getElementById('topCategoryName').innerText = categories[counts.indexOf(Math.max(...counts))] || 'Streetlight';
-        }
-
-        function viewFullSubmission(index) {
-            const r = requestsData[index];
-            const content = document.getElementById('adminModalContent');
-            content.innerHTML = `
-                <p><strong>Ticket ID:</strong> ${r.id}</p>
-                <p><strong>Submission Date:</strong> ${r.date}</p>
-                <p><strong>Registered Citizen Sender:</strong> ${r.citizen}</p>
-                <p><strong>Category:</strong> ${r.category}</p>
-                <p><strong>Location / Sub-County:</strong> ${r.location}</p>
-                <p><strong>Urgency Level:</strong> ${r.urgency}</p>
-                <p><strong>Assigned Department:</strong> ${r.department}</p>
-                <p><strong>Current Status:</strong> <span class="font-bold">${r.status}</span></p>
-                <div class="mt-2 p-3 bg-slate-50 rounded border">
-                    <strong>Full Description / Comments:</strong><br>
-                    <p class="text-slate-600 mt-1">${r.description}</p>
-                </div>
-            `;
-            document.getElementById('adminDetailModal').classList.remove('hidden');
-        }
-
-        function closeAdminDetailModal() {
-            document.getElementById('adminDetailModal').classList.add('hidden');
+            document.getElementById('loginForm').reset();
         }
 
         function openNewRequestModal() {
@@ -738,27 +629,218 @@
             document.getElementById('newRequestModal').classList.add('hidden');
         }
 
-        function handleNewRequest(e) {
-            e.preventDefault();
-            const newReq = {
-                id: 'MRG-' + Math.floor(1000 + Math.random() * 9000),
-                date: new Date().toISOString().split('T')[0],
-                citizen: `${currentUser.name} (ID: ${currentUser.id} | Tel: ${currentUser.phone || 'N/A'})`,
-                category: document.getElementById('reqCategory').value,
-                location: document.getElementById('reqLocation').value,
-                urgency: document.getElementById('reqUrgency').value,
+        function handleNewRequest(event) {
+            event.preventDefault();
+            const category = document.getElementById('reqCategory').value;
+            const location = document.getElementById('reqLocation').value.trim();
+            const urgency = document.getElementById('reqUrgency').value;
+            const description = document.getElementById('reqDesc').value.trim();
+
+            const randomId = 'MRG-' + Math.floor(1000 + Math.random() * 9000);
+            const today = new Date().toISOString().split('T')[0];
+
+            const newTicket = {
+                id: randomId,
+                date: today,
+                citizen: `${currentUser.name} (ID: ${currentUser.id} | Tel: ${currentUser.phone})`,
+                category: category,
+                location: location,
+                urgency: urgency,
                 status: 'Pending',
-                description: document.getElementById('reqDesc').value,
-                department: 'General Public Works'
+                description: description,
+                department: getDepartmentForCategory(category)
             };
-            requestsData.unshift(newReq);
+
+            requestsData = getStoredRequests();
+            requestsData.unshift(newTicket);
+            localStorage.setItem('muranga_requests', JSON.stringify(requestsData));
+
             closeNewRequestModal();
+            document.querySelector('#newRequestModal form').reset();
             renderCitizenRequests();
-            alert('Service request submitted successfully and logged to Admin Console!');
+            alert(`Service request ${randomId} submitted successfully!`);
         }
 
-        function toggleDocs() {
-            alert("eCitizen Public Service Portal Documentation:\n\n- Register a new account if you don't have one.\n- File service requests as a Citizen.\n- Admin can view complete sender details, triage tickets, and monitor live case analytics.");
+        function getDepartmentForCategory(cat) {
+            switch(cat) {
+                case 'Streetlight': return 'Electrical Works';
+                case 'Water & Sanitation': return 'Water Services';
+                case 'Garbage Collection': return 'Waste Management';
+                case 'Road Damage': return 'Roads & Civil Works';
+                default: return 'Public Health Division';
+            }
+        }
+
+        function renderCitizenRequests() {
+            requestsData = getStoredRequests();
+            const container = document.getElementById('citizenRequestList');
+            const myRequests = requestsData.filter(r => r.citizen.includes(currentUser.id));
+
+            if (myRequests.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 py-6 text-center">You have not submitted any public service requests yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = myRequests.map(req => `
+                <div class="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-gov-navy text-xs">${req.id}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${getStatusBadgeClass(req.status)}">${req.status}</span>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-800 mt-0.5">${req.category} — <span class="font-normal text-slate-600">${req.location}</span></p>
+                        <p class="text-[11px] text-slate-500 mt-1">${req.description}</p>
+                    </div>
+                    <div class="text-right text-[11px] text-slate-400">
+                        Submitted: ${req.date}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'Pending': return 'bg-amber-100 text-amber-800';
+                case 'In Progress': return 'bg-blue-100 text-blue-800';
+                case 'Resolved': return 'bg-emerald-100 text-emerald-800';
+                default: return 'bg-rose-100 text-rose-800';
+            }
+        }
+
+        function initAdminDashboard() {
+            requestsData = getStoredRequests();
+            
+            document.getElementById('kpiTotal').textContent = requestsData.length;
+            document.getElementById('kpiPending').textContent = requestsData.filter(r => r.status === 'Pending').length;
+            document.getElementById('kpiInProgress').textContent = requestsData.filter(r => r.status === 'In Progress').length;
+            document.getElementById('kpiResolved').textContent = requestsData.filter(r => r.status === 'Resolved').length;
+
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = requestsData.map((req, index) => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3.5">
+                        <span class="font-bold text-gov-navy">${req.id}</span>
+                        <div class="text-[10px] text-slate-400">${req.date}</div>
+                    </td>
+                    <td class="p-3.5 font-medium text-slate-700">${req.citizen}</td>
+                    <td class="p-3.5">
+                        <div class="font-semibold text-slate-800">${req.category}</div>
+                        <div class="text-[10px] text-slate-500 truncate max-w-xs">${req.description}</div>
+                    </td>
+                    <td class="p-3.5 text-slate-600">${req.location}</td>
+                    <td class="p-3.5">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${req.urgency === 'High' ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'}">${req.urgency}</span>
+                    </td>
+                    <td class="p-3.5">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold ${getStatusBadgeClass(req.status)}">${req.status}</span>
+                    </td>
+                    <td class="p-3.5 text-right space-x-1">
+                        <button onclick="openAdminDetail(${index})" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-md">View</button>
+                        <button onclick="openAdminTriage(${index})" class="px-2.5 py-1 bg-gov-navy hover:bg-gov-navyLight text-white font-semibold rounded-md">Triage</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            renderAnalyticsCharts(requestsData);
+        }
+
+        function openAdminDetail(index) {
+            requestsData = getStoredRequests();
+            const req = requestsData[index];
+            const content = document.getElementById('adminModalContent');
+            content.innerHTML = `
+                <p><strong>Ticket ID:</strong> ${req.id}</p>
+                <p><strong>Date Filed:</strong> ${req.date}</p>
+                <p><strong>Citizen Details:</strong> ${req.citizen}</p>
+                <p><strong>Category:</strong> ${req.category}</p>
+                <p><strong>Sub-County Location:</strong> ${req.location}</p>
+                <p><strong>Urgency Level:</strong> ${req.urgency}</p>
+                <p><strong>Current Status:</strong> ${req.status}</p>
+                <p><strong>Assigned Department:</strong> ${req.department}</p>
+                <div class="bg-slate-50 p-3 rounded-lg border mt-2">
+                    <strong>Description:</strong><br>${req.description}
+                </div>
+            `;
+            document.getElementById('adminDetailModal').classList.remove('hidden');
+        }
+
+        function closeAdminDetailModal() {
+            document.getElementById('adminDetailModal').classList.add('hidden');
+        }
+
+        function openAdminTriage(index) {
+            requestsData = getStoredRequests();
+            const req = requestsData[index];
+            document.getElementById('triageTicketIndex').value = index;
+            document.getElementById('triageTicketId').value = req.id;
+            document.getElementById('triageStatusSelect').value = req.status;
+            document.getElementById('triageDepartmentSelect').value = req.department || 'Electrical Works';
+            document.getElementById('adminTriageModal').classList.remove('hidden');
+        }
+
+        function closeAdminTriageModal() {
+            document.getElementById('adminTriageModal').classList.add('hidden');
+        }
+
+        function handleTriageSubmit(event) {
+            event.preventDefault();
+            const index = document.getElementById('triageTicketIndex').value;
+            const newStatus = document.getElementById('triageStatusSelect').value;
+            const newDept = document.getElementById('triageDepartmentSelect').value;
+
+            requestsData = getStoredRequests();
+            requestsData[index].status = newStatus;
+            requestsData[index].department = newDept;
+
+            localStorage.setItem('muranga_requests', JSON.stringify(requestsData));
+
+            closeAdminTriageModal();
+            initAdminDashboard();
+            alert('Case triage updated and saved permanently!');
+        }
+
+        function renderAnalyticsCharts(data) {
+            const pendingCount = data.filter(r => r.status === 'Pending').length;
+            const progressCount = data.filter(r => r.status === 'In Progress').length;
+            const resolvedCount = data.filter(r => r.status === 'Resolved').length;
+
+            if (statusChartInstance) statusChartInstance.destroy();
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            statusChartInstance = new Chart(ctxStatus, {
+                type: 'bar',
+                data: {
+                    labels: ['Pending Triage', 'In Progress', 'Resolved'],
+                    datasets: [{
+                        label: 'Ticket Volume',
+                        data: [pendingCount, progressCount, resolvedCount],
+                        backgroundColor: ['#d97706', '#2563eb', '#059669'],
+                        borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const categories = {};
+            data.forEach(r => {
+                categories[r.category] = (categories[r.category] || 0) + 1;
+            });
+
+            const topCat = Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b, 'None');
+            document.getElementById('topCategoryName').textContent = `${topCat} (${categories[topCat] || 0} reports)`;
+
+            if (categoryChartInstance) categoryChartInstance.destroy();
+            const ctxCat = document.getElementById('categoryChart').getContext('2d');
+            categoryChartInstance = new Chart(ctxCat, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categories),
+                    datasets: [{
+                        data: Object.values(categories),
+                        backgroundColor: ['#0b1f3a', '#c59b27', '#059669', '#2563eb', '#7c3aed']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
         }
     </script>
 </body>
