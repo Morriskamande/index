@@ -47,10 +47,6 @@
             <span class="font-medium tracking-wide">Official Republic Digital Citizen Portal</span>
         </div>
         <div class="flex items-center space-x-4">
-            <button id="docToggleBtn" onclick="toggleDocs()" class="hover:underline flex items-center gap-1 text-slate-300 hover:text-white transition">
-                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Documentation & Guide
-            </button>
-            <span class="text-slate-500">|</span>
             <span class="text-slate-300">Murang'a County Helpline: <strong>+254 757 562 988-MURANGA-GOV</strong></span>
         </div>
     </div>
@@ -70,16 +66,6 @@
                     </div>
                 </div>
 
-                <!-- Center Mode Switcher (Visible after login) -->
-                <div id="headerModeSwitcher" class="hidden md:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
-                    <button id="modeCitizenBtn" onclick="switchMode('citizen')" class="px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 flex items-center gap-1.5 bg-gov-navy text-white shadow-sm">
-                        <i data-lucide="user" class="w-3.5 h-3.5"></i> Citizen Portal
-                    </button>
-                    <button id="modeAdminBtn" onclick="switchMode('admin')" class="px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 flex items-center gap-1.5 text-slate-600 hover:text-slate-900">
-                        <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> County Admin Console
-                    </button>
-                </div>
-
                 <!-- User Account & Logout Area -->
                 <div class="flex items-center space-x-3">
                     <div id="currentUserBadge" class="hidden sm:flex items-center space-x-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg">
@@ -95,24 +81,8 @@
                     <button id="logoutBtn" onclick="handleLogout()" class="hidden text-xs bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 font-semibold px-3 py-1.5 rounded-lg border border-slate-200 transition flex items-center gap-1">
                         <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
                     </button>
-
-                    <!-- Mobile Menu Switch -->
-                    <button onclick="toggleMobileMenu()" id="mobileMenuBtn" class="hidden md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
-                        <i data-lucide="menu" class="w-5 h-5"></i>
-                    </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Mobile Dropdown Navigation -->
-        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-slate-50 p-4 space-y-2">
-            <div class="font-semibold text-xs text-slate-500 mb-2">SWITCH PORTAL MODE</div>
-            <button onclick="switchMode('citizen')" class="w-full text-left px-3 py-2 text-sm font-medium rounded-lg bg-gov-navy text-white flex items-center gap-2">
-                <i data-lucide="user" class="w-4 h-4"></i> Citizen Portal
-            </button>
-            <button onclick="switchMode('admin')" class="w-full text-left px-3 py-2 text-sm font-medium rounded-lg text-slate-700 hover:bg-slate-200 flex items-center gap-2">
-                <i data-lucide="shield-alert" class="w-4 h-4"></i> Admin Console
-            </button>
         </div>
     </header>
 
@@ -120,160 +90,145 @@
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         <!-- ================= LOGIN SCREEN VIEW ================= -->
-        <div id="loginView" class="max-w-md mx-auto my-8 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
-            <div class="bg-gov-navy p-6 text-center text-white relative">
-                <div class="w-12 h-12 rounded-xl bg-gov-gold/20 mx-auto flex items-center justify-center text-gov-gold border border-gov-gold/30 mb-3">
-                    <i data-lucide="lock" class="w-6 h-6"></i>
+        <div id="loginContainer" class="max-w-md mx-auto my-8">
+            <!-- Login Card -->
+            <div id="loginView" class="bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+                <div class="bg-gov-navy p-6 text-center text-white relative">
+                    <div class="w-12 h-12 rounded-xl bg-gov-gold/20 mx-auto flex items-center justify-center text-gov-gold border border-gov-gold/30 mb-3">
+                        <i data-lucide="lock" class="w-6 h-6"></i>
+                    </div>
+                    <h2 class="text-xl font-bold">Portal Access Authentication</h2>
+                    <p class="text-xs text-slate-300 mt-1">Select account type and enter credentials to continue</p>
                 </div>
-                <h2 class="text-xl font-bold">Portal Access Authentication</h2>
-                <p class="text-xs text-slate-300 mt-1">Select account type and enter credentials to continue</p>
+
+                <div class="p-6">
+                    <!-- Preset Quick Fill Buttons -->
+                    <div class="mb-5 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2 text-center">Quick Login Credentials</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" onclick="fillCredentials('citizen')" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-medium text-xs rounded-lg border border-slate-300 transition text-left flex items-center justify-center gap-1">
+                                <i data-lucide="user" class="w-3.5 h-3.5 text-blue-600"></i> Citizen Preset
+                            </button>
+                            <button type="button" onclick="fillCredentials('admin')" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-medium text-xs rounded-lg border border-slate-300 transition text-left flex items-center justify-center gap-1">
+                                <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-600"></i> Admin Preset
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Access Role</label>
+                            <select id="loginRole" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
+                                <option value="citizen">Regular Citizen Resident</option>
+                                <option value="admin">Murang'a County Administrator</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">National ID / Official Username</label>
+                            <input type="text" id="loginUsername" required placeholder="Enter ID or Username" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Password</label>
+                            <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
+                        </div>
+
+                        <div id="loginError" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0"></i>
+                            <span id="loginErrorText">Invalid credentials provided.</span>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-gov-navy hover:bg-gov-navyLight text-white font-bold rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2">
+                            <i data-lucide="log-in" class="w-4 h-4"></i> Sign In to Portal
+                        </button>
+                    </form>
+
+                    <!-- Toggle to Signup -->
+                    <div class="mt-4 text-center text-xs">
+                        <p class="text-slate-500">Don't have an account? <button onclick="toggleAuthView('signup')" class="text-gov-navy font-bold hover:underline">Register here</button></p>
+                    </div>
+
+                    <!-- Reserve Logins Info Card -->
+                    <div id="reservedLoginsCard" class="mt-6 pt-4 border-t border-slate-200 text-[11px] text-slate-500 space-y-1">
+                        <p class="font-bold text-slate-700 flex items-center gap-1">
+                            <i data-lucide="info" class="w-3 h-3 text-gov-gold"></i> Reserved System Accounts:
+                        </p>
+                        <p>• <strong>Citizen Log in:</strong> ID/User: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono">28491032</code> | Pass: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono">citizen123</code></p>
+                        <p>• <strong>Admin Log in:</strong> ID/User: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono">ADMIN-001</code> | Pass: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono">admin123</code></p>
+                    </div>
+                </div>
             </div>
 
-            <div class="p-6">
-                <!-- Preset Quick Fill Buttons -->
-                <div class="mb-5 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-2 text-center">Quick Login Credentials</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button type="button" onclick="fillCredentials('citizen')" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-medium text-xs rounded-lg border border-slate-300 transition text-left flex items-center justify-center gap-1">
-                            <i data-lucide="user" class="w-3.5 h-3.5 text-blue-600"></i> Citizen Preset
-                        </button>
-                        <button type="button" onclick="fillCredentials('admin')" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-medium text-xs rounded-lg border border-slate-300 transition text-left flex items-center justify-center gap-1">
-                            <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-600"></i> Admin Preset
-                        </button>
+            <!-- Signup Card (Initially Hidden) -->
+            <div id="signupView" class="hidden bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+                <div class="bg-gov-navy p-6 text-center text-white relative">
+                    <div class="w-12 h-12 rounded-xl bg-gov-gold/20 mx-auto flex items-center justify-center text-gov-gold border border-gov-gold/30 mb-3">
+                        <i data-lucide="user-plus" class="w-6 h-6"></i>
                     </div>
+                    <h2 class="text-xl font-bold">Create Citizen Account</h2>
+                    <p class="text-xs text-slate-300 mt-1">Register your details to file public service reports</p>
                 </div>
 
-                <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Access Role</label>
-                        <select id="loginRole" onchange="updateRoleHint()" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
-                            <option value="citizen">Regular Citizen Resident</option>
-                            <option value="admin">Murang'a County Administrator</option>
-                        </select>
+                <div class="p-6">
+                    <form onsubmit="handleSignupSubmit(event)" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Full Name</label>
+                            <input type="text" id="signupName" required placeholder="e.g. Jane Wangari" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">National ID Number</label>
+                            <input type="text" id="signupId" required placeholder="e.g. 38291023" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Phone Number</label>
+                            <input type="text" id="signupPhone" required placeholder="e.g. 0712345678" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Password</label>
+                            <input type="password" id="signupPassword" required placeholder="••••••••" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
+                        </div>
+
+                        <div id="signupSuccess" class="hidden p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs">
+                            Account created successfully! You can now sign in.
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-gov-navy hover:bg-gov-navyLight text-white font-bold rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i> Complete Registration
+                        </button>
+                    </form>
+
+                    <div class="mt-4 text-center text-xs">
+                        <p class="text-slate-500">Already have an account? <button onclick="toggleAuthView('login')" class="text-gov-navy font-bold hover:underline">Sign In here</button></p>
                     </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">National ID / Official Username</label>
-                        <input type="text" id="loginUsername" required placeholder="Enter ID or Username" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Password</label>
-                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
-                    </div>
-
-                    <div id="loginError" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-center gap-2">
-                        <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0"></i>
-                        <span id="loginErrorText">Invalid credentials provided.</span>
-                    </div>
-
-                    <button type="submit" class="w-full py-3 bg-gov-navy hover:bg-gov-navyLight text-white font-bold rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2">
-                        <i data-lucide="log-in" class="w-4 h-4"></i> Sign In to Portal
-                    </button>
-                </form>
-
-                <!-- Reserve Logins Info Card -->
-                <div class="mt-6 pt-4 border-t border-slate-200 text-[11px] text-slate-500 space-y-1">
-                    <p class="font-bold text-slate-700 flex items-center gap-1">
-                        <i data-lucide="info" class="w-3 h-3 text-gov-gold"></i> Reserved System Accounts:
-                    </p>
-                    <p>• <strong>Citizen Log in:</strong> ID/User: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono">28491032</code> | Pass: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono">citizen123</code></p>
-                    <p>• <strong>Admin Log in:</strong> ID/User: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono">ADMIN-001</code> | Pass: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-800 font-mono">admin123</code></p>
                 </div>
             </div>
         </div>
 
         <!-- ================= CITIZEN PORTAL VIEW ================= -->
         <div id="citizenView" class="hidden space-y-6">
-
-            <!-- Hero Greeting Header -->
             <div class="bg-gradient-to-r from-gov-navy via-gov-navyLight to-slate-800 text-white rounded-2xl p-6 sm:p-8 shadow-md relative overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
-                    <i data-lucide="building-2" class="w-72 h-72"></i>
-                </div>
                 <div class="relative z-10 max-w-2xl">
                     <span class="bg-gov-gold/20 text-gov-gold text-xs font-semibold px-2.5 py-1 rounded-md border border-gov-gold/30 uppercase tracking-wider">Murang'a County Service Portal</span>
                     <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-2 mb-2">Report Infrastructure & Public Services in Murang'a</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-6">Submit requests for streetlights, water, waste, roads, and municipal concerns directly to Murang'a County officers across all sub-counties. Track resolution transparently in real time.</p>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">Submit requests for streetlights, water, waste, roads, and municipal concerns directly to Murang'a County officers.</p>
                     
                     <div class="flex flex-wrap gap-3">
-                        <button onclick="openNewRequestModal()" class="bg-gov-gold hover:bg-gov-goldHover text-gov-navy font-bold px-5 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition flex items-center gap-2 text-sm">
+                        <button onclick="openNewRequestModal()" class="bg-gov-gold hover:bg-gov-goldHover text-gov-navy font-bold px-5 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2 text-sm">
                             <i data-lucide="plus-circle" class="w-4 h-4"></i> New Service Request
                         </button>
-                        <button onclick="document.getElementById('citizenRequestsSection').scrollIntoView({ behavior: 'smooth' })" class="bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2.5 rounded-xl transition text-sm backdrop-blur-sm border border-white/10 flex items-center gap-2">
-                            <i data-lucide="list" class="w-4 h-4"></i> View My Filings (<span id="citizenCountBadge">0</span>)
-                        </button>
                     </div>
-                </div>
-            </div>
-
-            <!-- Quick Service Category Grid -->
-            <div>
-                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Common Service Categories</h3>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-                    <button onclick="openNewRequestModal('Streetlight')" class="p-3.5 bg-white border border-slate-200 hover:border-gov-navy/40 hover:shadow-md rounded-xl text-center transition group flex flex-col items-center">
-                        <div class="w-10 h-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
-                            <i data-lucide="lightbulb" class="w-5 h-5"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-gov-navy">Streetlights</span>
-                    </button>
-                    <button onclick="openNewRequestModal('Water & Sanitation')" class="p-3.5 bg-white border border-slate-200 hover:border-gov-navy/40 hover:shadow-md rounded-xl text-center transition group flex flex-col items-center">
-                        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
-                            <i data-lucide="droplet" class="w-5 h-5"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-gov-navy">Water & Sanitation</span>
-                    </button>
-                    <button onclick="openNewRequestModal('Garbage Collection')" class="p-3.5 bg-white border border-slate-200 hover:border-gov-navy/40 hover:shadow-md rounded-xl text-center transition group flex flex-col items-center">
-                        <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
-                            <i data-lucide="trash-2" class="w-5 h-5"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-gov-navy">Garbage & Waste</span>
-                    </button>
-                    <button onclick="openNewRequestModal('Road Damage')" class="p-3.5 bg-white border border-slate-200 hover:border-gov-navy/40 hover:shadow-md rounded-xl text-center transition group flex flex-col items-center">
-                        <div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
-                            <i data-lucide="cone" class="w-5 h-5"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-gov-navy">Road Repairs</span>
-                    </button>
-                    <button onclick="openNewRequestModal('Public Health')" class="p-3.5 bg-white border border-slate-200 hover:border-gov-navy/40 hover:shadow-md rounded-xl text-center transition group flex flex-col items-center">
-                        <div class="w-10 h-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
-                            <i data-lucide="heart-pulse" class="w-5 h-5"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-gov-navy">Public Health</span>
-                    </button>
-                    <button onclick="openNewRequestModal('Parks & Recreation')" class="p-3.5 bg-white border border-slate-200 hover:border-gov-navy/40 hover:shadow-md rounded-xl text-center transition group flex flex-col items-center">
-                        <div class="w-10 h-10 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mb-2 group-hover:scale-110 transition">
-                            <i data-lucide="trees" class="w-5 h-5"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-gov-navy">Parks & Trees</span>
-                    </button>
                 </div>
             </div>
 
             <!-- My Requests Dashboard Section -->
             <div id="citizenRequestsSection" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between sm:items-center gap-3 bg-slate-50/80">
-                    <div>
-                        <h3 class="text-base font-bold text-gov-navy flex items-center gap-2">
-                            <i data-lucide="folder-open" class="w-5 h-5 text-gov-gold"></i> My Submitted Requests
-                        </h3>
-                        <p class="text-xs text-slate-500">Track current progress, official comments, and resolution timelines.</p>
-                    </div>
-
-                    <!-- Filter Options -->
-                    <div class="flex items-center space-x-2">
-                        <select id="citizenFilterStatus" onchange="renderCitizenRequests()" class="text-xs bg-white border border-slate-300 rounded-lg px-3 py-1.5 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-gov-navy">
-                            <option value="ALL">All Statuses</option>
-                            <option value="Pending">Pending</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Resolved">Resolved</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
-                    </div>
+                <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50/80">
+                    <h3 class="text-base font-bold text-gov-navy flex items-center gap-2">
+                        <i data-lucide="folder-open" class="w-5 h-5 text-gov-gold"></i> My Submitted Requests
+                    </h3>
                 </div>
-
-                <!-- Citizen Request List Container -->
-                <div id="citizenRequestList" class="divide-y divide-slate-100">
+                <div id="citizenRequestList" class="divide-y divide-slate-100 p-4">
                     <!-- Populated dynamically -->
                 </div>
             </div>
@@ -281,24 +236,17 @@
 
         <!-- ================= ADMIN CONSOLE VIEW ================= -->
         <div id="adminView" class="hidden space-y-6">
-
-            <!-- Admin Banner -->
-            <div class="bg-gov-navy text-white rounded-2xl p-6 shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="bg-gov-navy text-white rounded-2xl p-6 shadow-md flex justify-between items-center">
                 <div>
                     <div class="flex items-center gap-2 text-gov-gold text-xs font-semibold uppercase tracking-wider mb-1">
                         <i data-lucide="shield" class="w-4 h-4"></i> Murang'a Field & Dispatch Dashboard
                     </div>
                     <h2 class="text-2xl font-bold">County Public Service Management System</h2>
-                    <p class="text-slate-300 text-xs mt-1">Review incoming civic issues across Kiharu, Maragua, Kangema, Kandara, Mathioya, Gatanga, and Makuyu.</p>
-                </div>
-                <div class="flex items-center gap-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700">
-                    <button onclick="resetDataToDefault()" class="px-3 py-1.5 text-xs bg-slate-700 hover:bg-slate-600 rounded-lg text-slate-200 font-medium transition flex items-center gap-1.5">
-                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Mock Data
-                    </button>
+                    <p class="text-slate-300 text-xs mt-1">Review incoming civic issues, triage cases, and track live resolution analytics across all sub-counties.</p>
                 </div>
             </div>
 
-            <!-- KPI Metric Cards -->
+            <!-- KPI Metric Cards (Analytics) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
@@ -313,9 +261,9 @@
 
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-bold text-amber-600 uppercase tracking-wider">Pending Action</p>
+                        <p class="text-xs font-bold text-amber-600 uppercase tracking-wider">Pending Triage</p>
                         <h4 class="text-2xl font-extrabold text-amber-600 mt-1" id="kpiPending">0</h4>
-                        <span class="text-[11px] text-amber-700">Awaiting officer triage</span>
+                        <span class="text-[11px] text-amber-700">Open cases awaiting action</span>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
                         <i data-lucide="clock" class="w-6 h-6"></i>
@@ -326,7 +274,7 @@
                     <div>
                         <p class="text-xs font-bold text-blue-600 uppercase tracking-wider">In Progress</p>
                         <h4 class="text-2xl font-extrabold text-blue-600 mt-1" id="kpiInProgress">0</h4>
-                        <span class="text-[11px] text-blue-700">Field crew assigned</span>
+                        <span class="text-[11px] text-blue-700">Field crew dispatched</span>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
                         <i data-lucide="wrench" class="w-6 h-6"></i>
@@ -345,29 +293,27 @@
                 </div>
             </div>
 
-            <!-- Interactive Analytics Section -->
+            <!-- Basic Analytics Visual Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Status & Volume Chart -->
                 <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-sm font-bold text-gov-navy flex items-center gap-2">
-                            <i data-lucide="bar-chart-3" class="w-4 h-4 text-gov-gold"></i> Service Request Resolution Overview
+                            <i data-lucide="bar-chart-3" class="w-4 h-4 text-gov-gold"></i> Open vs Resolved Cases Analytics
                         </h3>
-                        <span class="text-xs text-slate-400">Live Breakdown</span>
+                        <span class="text-xs text-slate-400">Live Status Volume</span>
                     </div>
                     <div class="h-56 relative">
                         <canvas id="statusChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Category Breakdown Distribution -->
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-sm font-bold text-gov-navy flex items-center gap-2">
                                 <i data-lucide="pie-chart" class="w-4 h-4 text-gov-gold"></i> By Category
                             </h3>
-                            <span class="text-xs text-slate-400">Share</span>
+                            <span class="text-xs text-slate-400">Distribution</span>
                         </div>
                         <div class="h-44 relative">
                             <canvas id="categoryChart"></canvas>
@@ -381,54 +327,21 @@
 
             <!-- Admin Requests Data Table -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <!-- Search and Filter Bar -->
-                <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
-                    <div class="flex-1 min-w-[240px] relative">
-                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
-                        <input type="text" id="adminSearchInput" oninput="renderAdminRequests()" placeholder="Search by ID, citizen name, location, or keyword..." class="w-full text-xs pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gov-navy">
-                    </div>
-
-                    <div class="flex items-center space-x-2 flex-wrap">
-                        <select id="adminFilterCategory" onchange="renderAdminRequests()" class="text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-gov-navy">
-                            <option value="ALL">All Categories</option>
-                            <option value="Streetlight">Streetlight</option>
-                            <option value="Water & Sanitation">Water & Sanitation</option>
-                            <option value="Garbage Collection">Garbage Collection</option>
-                            <option value="Road Damage">Road Damage</option>
-                            <option value="Public Health">Public Health</option>
-                            <option value="Parks & Recreation">Parks & Recreation</option>
-                        </select>
-
-                        <select id="adminFilterStatus" onchange="renderAdminRequests()" class="text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-gov-navy">
-                            <option value="ALL">All Statuses</option>
-                            <option value="Pending">Pending</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Resolved">Resolved</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
-
-                        <select id="adminFilterUrgency" onchange="renderAdminRequests()" class="text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-gov-navy">
-                            <option value="ALL">All Urgency Levels</option>
-                            <option value="High">High Urgency</option>
-                            <option value="Medium">Medium Urgency</option>
-                            <option value="Low">Low Urgency</option>
-                        </select>
-                    </div>
+                <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-xs text-slate-700 flex justify-between items-center">
+                    <span>All Client Submissions & Senders</span>
+                    <span class="text-[11px] text-slate-500 font-normal">Triage tickets and update statuses</span>
                 </div>
-
-                <!-- Table View -->
                 <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
                             <tr class="bg-slate-100 text-slate-600 uppercase tracking-wider font-semibold border-b border-slate-200">
                                 <th class="p-3.5">Ticket ID / Date</th>
-                                <th class="p-3.5">Citizen</th>
+                                <th class="p-3.5">Citizen Sender</th>
                                 <th class="p-3.5">Issue & Category</th>
                                 <th class="p-3.5">Location</th>
                                 <th class="p-3.5">Urgency</th>
-                                <th class="p-3.5">Status</th>
-                                <th class="p-3.5">Department</th>
-                                <th class="p-3.5 text-right">Action</th>
+                                <th class="p-3.5">Status Track</th>
+                                <th class="p-3.5 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="adminTableBody" class="divide-y divide-slate-100 font-normal">
@@ -436,779 +349,498 @@
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Empty State -->
-                <div id="adminEmptyState" class="hidden p-8 text-center text-slate-500">
-                    <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
-                    <p class="font-medium text-sm">No service requests match the selected filters.</p>
-                </div>
             </div>
         </div>
-
     </main>
 
-    <!-- ================= MODALS & OVERLAYS ================= -->
-
-    <!-- NEW SERVICE REQUEST MODAL (Citizen) -->
-    <div id="newRequestModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full border border-slate-200 overflow-hidden my-8">
-            <div class="bg-gov-navy text-white p-5 flex justify-between items-center border-b border-slate-700">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-gov-gold/20 flex items-center justify-center text-gov-gold">
-                        <i data-lucide="file-plus" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-base">New Public Service Request</h3>
-                        <p class="text-xs text-slate-300">Official Municipal Complaint & Repair Form</p>
-                    </div>
-                </div>
-                <button onclick="closeNewRequestModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <form id="requestForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4 text-xs">
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Issue Title / Brief Subject *</label>
-                    <input type="text" id="reqTitle" required placeholder="e.g., Damaged Water Pipe, Broken Streetlight Pole #402" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Service Category *</label>
-                        <select id="reqCategory" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
-                            <option value="">Select Category</option>
-                            <option value="Streetlight">Streetlight Maintenance</option>
-                            <option value="Water & Sanitation">Water & Sanitation</option>
-                            <option value="Garbage Collection">Garbage & Solid Waste</option>
-                            <option value="Road Damage">Road Repair & Potholes</option>
-                            <option value="Public Health">Public Health & Safety</option>
-                            <option value="Parks & Recreation">Parks & Green Spaces</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-slate-700 mb-1">Urgency Level *</label>
-                        <select id="reqUrgency" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
-                            <option value="Low">Low - General Maintenance</option>
-                            <option value="Medium" selected>Medium - Prompt Attention Needed</option>
-                            <option value="High">High - Safety Hazard / Emergency</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label class="font-semibold text-slate-700">Location in Murang'a County *</label>
-                        <span class="text-[10px] text-slate-400">Specify sub-county, town or ward</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <input type="text" id="reqLocation" required placeholder="e.g., Kiharu Ward, Murang'a Town" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
-                        <button type="button" onclick="setPresetLocation()" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl text-[11px] whitespace-nowrap flex items-center gap-1">
-                            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> Murang'a Presets
-                        </button>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Detailed Description *</label>
-                    <textarea id="reqDescription" rows="3" required placeholder="Provide specific details about the issue to assist Murang'a County officers..." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs"></textarea>
-                </div>
-
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Attachment / Reference Note (Optional)</label>
-                    <input type="text" id="reqPhoto" placeholder="e.g., Near Murang'a Level 5 Hospital Gate" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy focus:bg-white text-xs">
-                </div>
-
-                <div class="pt-3 border-t border-slate-200 flex justify-end space-x-2">
-                    <button type="button" onclick="closeNewRequestModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-xs transition">Cancel</button>
-                    <button type="submit" class="px-5 py-2 bg-gov-navy hover:bg-gov-navyLight text-white font-bold rounded-xl text-xs shadow transition flex items-center gap-1.5">
-                        <i data-lucide="send" class="w-3.5 h-3.5"></i> Submit Ticket
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- UPDATE STATUS MODAL (Admin) -->
-    <div id="adminUpdateModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- ADMIN TRIAGE & STATUS UPDATE MODAL -->
+    <div id="adminTriageModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
             <div class="bg-gov-navy text-white p-4 flex justify-between items-center">
                 <h3 class="font-bold text-sm flex items-center gap-2">
-                    <i data-lucide="edit-3" class="w-4 h-4 text-gov-gold"></i> Dispatch Action & Status Update
+                    <i data-lucide="wrench" class="w-4 h-4 text-gov-gold"></i> Triage Case & Update Status
                 </h3>
-                <button onclick="closeAdminUpdateModal()" class="text-slate-400 hover:text-white">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
+                <button onclick="closeAdminTriageModal()" class="text-slate-300 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <form id="adminUpdateForm" onsubmit="handleAdminUpdateSubmit(event)" class="p-5 space-y-4 text-xs">
-                <input type="hidden" id="adminUpdateId">
+            <form onsubmit="handleTriageSubmit(event)" class="p-6 space-y-4 text-xs">
+                <input type="hidden" id="triageTicketIndex">
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Update Status</label>
-                    <select id="adminUpdateStatus" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy text-xs font-semibold">
-                        <option value="Pending">Pending Evaluation</option>
-                        <option value="In Progress">In Progress (Dispatched Field Crew)</option>
-                        <option value="Resolved">Resolved & Completed</option>
-                        <option value="Rejected">Rejected / Out of Scope</option>
+                    <label class="block font-semibold text-slate-700 mb-1">Ticket ID</label>
+                    <input type="text" id="triageTicketId" readonly class="w-full p-2 bg-slate-100 border rounded-lg text-slate-600 font-mono">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Update Resolution Status</label>
+                    <select id="triageStatusSelect" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy text-xs font-semibold">
+                        <option value="Pending">⏳ Pending Action</option>
+                        <option value="In Progress">🛠️ In Progress (Field Team Dispatched)</option>
+                        <option value="Resolved">✅ Resolved (Service Completed)</option>
+                        <option value="Rejected">❌ Rejected (Invalid / Duplicate)</option>
                     </select>
                 </div>
-
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Assign Sub-County Department</label>
-                    <input type="text" id="adminUpdateDept" required placeholder="e.g., Kiharu Works & Sanitation Dept" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy text-xs">
+                    <label class="block font-semibold text-slate-700 mb-1">Assign Department</label>
+                    <select id="triageDepartmentSelect" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs">
+                        <option value="Electrical Works">Electrical Works & Streetlighting</option>
+                        <option value="Water Services">Water & Sanitation Department</option>
+                        <option value="Waste Management">Garbage & Environmental Services</option>
+                        <option value="Roads & Infrastructure">Roads & County Civil Works</option>
+                        <option value="Public Health">Public Health Division</option>
+                    </select>
                 </div>
-
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Official Response / Progress Comment</label>
-                    <textarea id="adminUpdateComment" rows="3" placeholder="Notes for citizen view..." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gov-navy text-xs"></textarea>
-                </div>
-
-                <div class="pt-2 flex justify-end space-x-2">
-                    <button type="button" onclick="closeAdminUpdateModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-xs">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-gov-gold hover:bg-gov-goldHover text-gov-navy font-bold rounded-xl text-xs shadow transition">Save & Dispatch</button>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeAdminTriageModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold rounded-lg text-xs">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-gov-navy hover:bg-gov-navyLight text-white font-semibold rounded-lg text-xs">Save Triage Updates</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- DOCUMENTATION & GUIDE MODAL -->
-    <div id="docsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- ADMIN FULL SUBMISSION INSPECTION MODAL -->
+    <div id="adminDetailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full border border-slate-200 overflow-hidden">
             <div class="bg-gov-navy text-white p-4 flex justify-between items-center">
                 <h3 class="font-bold text-sm flex items-center gap-2">
-                    <i data-lucide="book-open" class="w-4 h-4 text-gov-gold"></i> Portal Usage Documentation
+                    <i data-lucide="file-text" class="w-4 h-4 text-gov-gold"></i> Complete Client Submission Details
                 </h3>
-                <button onclick="toggleDocs()" class="text-slate-400 hover:text-white">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
+                <button onclick="closeAdminDetailModal()" class="text-slate-300 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <div class="p-5 text-xs text-slate-600 space-y-3 leading-relaxed max-h-[80vh] overflow-y-auto">
-                <h4 class="font-bold text-slate-800">1. Authenticating Access</h4>
-                <p>Log in using either reserved resident details or admin credentials. Citizen mode allows filing and viewing issues, while Admin mode gives county officials controls to triage and resolve reported tickets.</p>
-
-                <h4 class="font-bold text-slate-800">2. Pre-configured Demo Logins</h4>
-                <div class="bg-slate-100 p-2.5 rounded-lg font-mono text-[11px] text-slate-800 space-y-1">
-                    <p><strong>Citizen Account:</strong> ID: 28491032 / Pass: citizen123</p>
-                    <p><strong>Admin Account:</strong> ID: ADMIN-001 / Pass: admin123</p>
-                </div>
-
-                <h4 class="font-bold text-slate-800">3. Data Persistence</h4>
-                <p>All filings, status updates, and comments persist in your local storage session. Click "Reset Mock Data" in the admin header to restore initial state.</p>
+            <div id="adminModalContent" class="p-6 space-y-3 text-xs text-slate-700">
+                <!-- Injected via JS -->
+            </div>
+            <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-end">
+                <button onclick="closeAdminDetailModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold rounded-lg text-xs">Close</button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC & APPLICATION STATE -->
+    <!-- NEW SERVICE REQUEST MODAL (Citizen) -->
+    <div id="newRequestModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full border border-slate-200 overflow-hidden">
+            <div class="bg-gov-navy text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm">New Public Service Request</h3>
+                <button onclick="closeNewRequestModal()" class="text-slate-300 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form onsubmit="handleNewRequest(event)" class="p-6 space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold mb-1">Category</label>
+                    <select id="reqCategory" class="w-full p-2 border rounded-lg">
+                        <option value="Streetlight">Streetlight</option>
+                        <option value="Water & Sanitation">Water & Sanitation</option>
+                        <option value="Garbage Collection">Garbage Collection</option>
+                        <option value="Road Damage">Road Damage</option>
+                        <option value="Public Health">Public Health</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Location / Sub-County</label>
+                    <input type="text" id="reqLocation" required placeholder="e.g. Kiharu, Murang'a Town" class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Urgency</label>
+                    <select id="reqUrgency" class="w-full p-2 border rounded-lg">
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Full Description of Issue</label>
+                    <textarea id="reqDesc" required rows="3" placeholder="Provide full details..." class="w-full p-2 border rounded-lg"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeNewRequestModal()" class="px-4 py-2 bg-slate-200 rounded-lg font-semibold">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-gov-navy text-white rounded-lg font-semibold">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripting for Login, Analytics, and Triage Workflow -->
     <script>
-        // ================= SYSTEM ACCOUNTS DATA =================
-        const RESERVED_ACCOUNTS = {
-            citizen: {
-                username: "28491032",
-                password: "citizen123",
-                name: "Morris Kamande",
-                role: "Murang'a Resident",
-                avatar: "MK",
-                type: "citizen"
-            },
-            admin: {
-                username: "ADMIN-001",
-                password: "admin123",
-                name: "Eng. Francis Njogu",
-                role: "Senior Dispatch Officer",
-                avatar: "FN",
-                type: "admin"
-            }
-        };
+        lucide.createIcons();
 
-        // Initial Seed Mock Requests
-        const DEFAULT_REQUESTS = [
-            {
-                id: "MRG-2026-881",
-                citizenName: "Morris Kamande",
-                citizenId: "28491032",
-                title: "Major Pothole on Murang'a-Kandara Highway",
-                category: "Road Damage",
-                location: "Kandara Ward, Murang'a South",
-                urgency: "High",
-                status: "In Progress",
-                department: "Murang'a Roads & Transport Dept",
-                description: "Deep pothole causing traffic hazards near the market center junction.",
-                photoNote: "Near Mobil Petrol Station",
-                date: "12 Oct 2026",
-                comments: ["Field crew dispatched with tarmac patch materials on Oct 14."]
-            },
-            {
-                id: "MRG-2026-704",
-                citizenName: "Grace Wambui",
-                citizenId: "19402834",
-                title: "Broken Streetlight Solar Panel",
-                category: "Streetlight",
-                location: "Kiharu Ward, Murang'a Town",
-                urgency: "Medium",
-                status: "Pending",
-                department: "Public Utilities Division",
-                description: "Streetlight unit #14 is non-functional at night.",
-                photoNote: "Opposite Post Office",
-                date: "14 Oct 2026",
-                comments: ["Awaiting technician scheduling."]
-            },
-            {
-                id: "MRG-2026-612",
-                citizenName: "Morris Kamande",
-                citizenId: "28491032",
-                title: "Water Supply Pipe Leakage",
-                category: "Water & Sanitation",
-                location: "Maragua Sub-County",
-                urgency: "High",
-                status: "Resolved",
-                department: "MUWASCO Water Company",
-                description: "Clean water leaking onto public footpath from main pipe connection.",
-                photoNote: "Near Maragua High School",
-                date: "08 Oct 2026",
-                comments: ["Pipe valve replaced and pressure tested on Oct 10."]
-            },
-            {
-                id: "MRG-2026-402",
-                citizenName: "David Maina",
-                citizenId: "30291823",
-                title: "Uncollected Market Solid Waste",
-                category: "Garbage Collection",
-                location: "Kangema Market",
-                urgency: "Medium",
-                status: "Resolved",
-                department: "County Environmental Dept",
-                description: "Overflowing refuse bin requiring municipal compaction truck dispatch.",
-                photoNote: "Central Bins",
-                date: "05 Oct 2026",
-                comments: ["Waste cleared by county sanitation crew."]
+        // Helper functions for LocalStorage management
+        function getStoredUsers() {
+            try {
+                const data = localStorage.getItem('muranga_users');
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                return [];
             }
-        ];
+        }
 
-        // Global Application State
+        function getStoredRequests() {
+            try {
+                const data = localStorage.getItem('muranga_requests');
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // Initialize LocalStorage Data if not present
+        if (!localStorage.getItem('muranga_users')) {
+            const defaultUsers = [
+                { name: 'John Kamau', id: '28491032', phone: '0711223344', password: 'citizen123' }
+            ];
+            localStorage.setItem('muranga_users', JSON.stringify(defaultUsers));
+        }
+
+        if (!localStorage.getItem('muranga_requests')) {
+            const defaultRequests = [
+                { id: 'MRG-8291', date: '2026-10-18', citizen: 'John Kamau (ID: 28491032 | Tel: 0711223344)', category: 'Streetlight', location: "Kiharu Ward, Murang'a", urgency: 'High', status: 'Pending', description: 'Transformer junction lights broken for over a week causing security risks at night.', department: 'Electrical Works' },
+                { id: 'MRG-7102', date: '2026-10-17', citizen: 'Grace Wanjiru (ID: 29102391 | Tel: 0722334455)', category: 'Water & Sanitation', location: 'Maragua Town', urgency: 'Medium', status: 'In Progress', description: 'Main pipe leakage near market stalls leading to water wastage.', department: 'Water Services' },
+                { id: 'MRG-5510', date: '2026-10-15', citizen: 'Peter Njoroge (ID: 21983021 | Tel: 0733445566)', category: 'Road Damage', location: 'Kangema Market Road', urgency: 'High', status: 'Resolved', description: 'Large pothole repaired near bus park.', department: 'Roads & Civil Works' }
+            ];
+            localStorage.setItem('muranga_requests', JSON.stringify(defaultRequests));
+        }
+
+        let registeredUsers = getStoredUsers();
+        let requestsData = getStoredRequests();
+
         let currentUser = null;
-        let requests = [];
         let statusChartInstance = null;
         let categoryChartInstance = null;
 
-        // ================= INITIALIZATION =================
-        window.addEventListener('DOMContentLoaded', () => {
-            loadRequestsFromStorage();
-            lucide.createIcons();
-            
-            // Check if user session exists in sessionStorage
-            const savedSession = sessionStorage.getItem('eCitizenUserSession');
-            if (savedSession) {
-                currentUser = JSON.parse(savedSession);
-                initializeAuthenticatedSession();
+        function toggleAuthView(view) {
+            if (view === 'signup') {
+                document.getElementById('loginView').classList.add('hidden');
+                document.getElementById('signupView').classList.remove('hidden');
             } else {
-                showLoginScreen();
-            }
-        });
-
-        function loadRequestsFromStorage() {
-            const stored = localStorage.getItem('muranga_ecitizen_requests');
-            if (stored) {
-                try { requests = JSON.parse(stored); }
-                catch(e) { requests = [...DEFAULT_REQUESTS]; }
-            } else {
-                requests = [...DEFAULT_REQUESTS];
-                saveRequestsToStorage();
-            }
-        }
-
-        function saveRequestsToStorage() {
-            localStorage.setItem('muranga_ecitizen_requests', JSON.stringify(requests));
-        }
-
-        function resetDataToDefault() {
-            if (confirm("Reset all service requests back to default mock data?")) {
-                requests = [...DEFAULT_REQUESTS];
-                saveRequestsToStorage();
-                renderAllViews();
-            }
-        }
-
-        // ================= AUTHENTICATION LOGIC =================
-        function updateRoleHint() {
-            const role = document.getElementById('loginRole').value;
-            if (role === 'citizen') {
-                document.getElementById('loginUsername').value = RESERVED_ACCOUNTS.citizen.username;
-                document.getElementById('loginPassword').value = RESERVED_ACCOUNTS.citizen.password;
-            } else {
-                document.getElementById('loginUsername').value = RESERVED_ACCOUNTS.admin.username;
-                document.getElementById('loginPassword').value = RESERVED_ACCOUNTS.admin.password;
+                document.getElementById('signupView').classList.add('hidden');
+                document.getElementById('loginView').classList.remove('hidden');
             }
         }
 
         function fillCredentials(type) {
-            document.getElementById('loginRole').value = type;
             if (type === 'citizen') {
-                document.getElementById('loginUsername').value = RESERVED_ACCOUNTS.citizen.username;
-                document.getElementById('loginPassword').value = RESERVED_ACCOUNTS.citizen.password;
+                document.getElementById('loginRole').value = 'citizen';
+                document.getElementById('loginUsername').value = '28491032';
+                document.getElementById('loginPassword').value = 'citizen123';
             } else {
-                document.getElementById('loginUsername').value = RESERVED_ACCOUNTS.admin.username;
-                document.getElementById('loginPassword').value = RESERVED_ACCOUNTS.admin.password;
+                document.getElementById('loginRole').value = 'admin';
+                document.getElementById('loginUsername').value = 'ADMIN-001';
+                document.getElementById('loginPassword').value = 'admin123';
             }
         }
 
-        function handleLoginSubmit(e) {
-            e.preventDefault();
+        function handleSignupSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('signupName').value.trim();
+            const id = document.getElementById('signupId').value.trim().toString();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+
+            registeredUsers = getStoredUsers();
+
+            const existing = registeredUsers.find(u => String(u.id).trim() === id);
+            if (existing) {
+                alert('A user with National ID ' + id + ' is already registered. Please login directly.');
+                toggleAuthView('login');
+                document.getElementById('loginRole').value = 'citizen';
+                document.getElementById('loginUsername').value = id;
+                return;
+            }
+
+            const newUser = { name, id, phone, password };
+            registeredUsers.push(newUser);
+            localStorage.setItem('muranga_users', JSON.stringify(registeredUsers));
+
+            document.getElementById('signupSuccess').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('signupSuccess').classList.add('hidden');
+                toggleAuthView('login');
+                document.getElementById('loginRole').value = 'citizen';
+                document.getElementById('loginUsername').value = id;
+                document.getElementById('loginPassword').value = password;
+                alert('Account registered successfully! Click "Sign In to Portal" to log in.');
+            }, 800);
+        }
+
+        function handleLoginSubmit(event) {
+            event.preventDefault();
             const role = document.getElementById('loginRole').value;
-            const userVal = document.getElementById('loginUsername').value.trim();
-            const passVal = document.getElementById('loginPassword').value.trim();
-            const errBox = document.getElementById('loginError');
+            const username = document.getElementById('loginUsername').value.trim().toString();
+            const password = document.getElementById('loginPassword').value.trim();
 
-            const targetAccount = RESERVED_ACCOUNTS[role];
+            let authenticated = false;
 
-            if (targetAccount && userVal === targetAccount.username && passVal === targetAccount.password) {
-                errBox.classList.add('hidden');
-                currentUser = targetAccount;
-                sessionStorage.setItem('eCitizenUserSession', JSON.stringify(currentUser));
-                initializeAuthenticatedSession();
+            if (role === 'admin') {
+                if (username === 'ADMIN-001' && password === 'admin123') {
+                    currentUser = { name: 'County Administrator', role: 'admin', id: 'ADMIN-001' };
+                    authenticated = true;
+                }
             } else {
-                errBox.classList.remove('hidden');
-                document.getElementById('loginErrorText').innerText = `Invalid login for ${role === 'admin' ? 'Admin Console' : 'Citizen Portal'}. Check reserved details.`;
+                registeredUsers = getStoredUsers();
+                const foundUser = registeredUsers.find(u => 
+                    String(u.id).trim().toLowerCase() === username.toLowerCase() && 
+                    String(u.password).trim() === password
+                );
+
+                if (foundUser) {
+                    currentUser = { 
+                        name: foundUser.name, 
+                        role: 'citizen', 
+                        id: foundUser.id, 
+                        phone: foundUser.phone 
+                    };
+                    authenticated = true;
+                }
+            }
+
+            if (authenticated) {
+                document.getElementById('loginError').classList.add('hidden');
+                document.getElementById('loginContainer').classList.add('hidden');
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('currentUserBadge').classList.remove('hidden');
+                
+                document.getElementById('userNameDisplay').textContent = currentUser.name;
+                document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? 'County Administrator' : `Citizen ID: ${currentUser.id}`;
+                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+
+                if (currentUser.role === 'admin') {
+                    document.getElementById('adminView').classList.remove('hidden');
+                    initAdminDashboard();
+                } else {
+                    document.getElementById('citizenView').classList.remove('hidden');
+                    renderCitizenRequests();
+                }
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+                document.getElementById('loginErrorText').textContent = 'Invalid ID/Username or Password.';
             }
         }
 
         function handleLogout() {
             currentUser = null;
-            sessionStorage.removeItem('eCitizenUserSession');
-            showLoginScreen();
-        }
-
-        function showLoginScreen() {
-            document.getElementById('loginView').classList.remove('hidden');
-            document.getElementById('citizenView').classList.add('hidden');
-            document.getElementById('adminView').classList.add('hidden');
-            document.getElementById('headerModeSwitcher').classList.add('hidden');
-            document.getElementById('currentUserBadge').classList.add('hidden');
             document.getElementById('logoutBtn').classList.add('hidden');
-            document.getElementById('mobileMenuBtn').classList.add('hidden');
+            document.getElementById('currentUserBadge').classList.add('hidden');
+            document.getElementById('adminView').classList.add('hidden');
+            document.getElementById('citizenView').classList.add('hidden');
+            document.getElementById('loginContainer').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
         }
 
-        function initializeAuthenticatedSession() {
-            document.getElementById('loginView').classList.add('hidden');
-            document.getElementById('currentUserBadge').classList.remove('hidden');
-            document.getElementById('logoutBtn').classList.remove('hidden');
-            document.getElementById('headerModeSwitcher').classList.remove('hidden');
-            document.getElementById('mobileMenuBtn').classList.remove('hidden');
-
-            document.getElementById('userNameDisplay').innerText = currentUser.name;
-            document.getElementById('userRoleDisplay').innerText = currentUser.role;
-            document.getElementById('userAvatar').innerText = currentUser.avatar;
-
-            if (currentUser.type === 'admin') {
-                switchMode('admin');
-            } else {
-                switchMode('citizen');
-            }
-        }
-
-        // ================= MODE SWITCHING =================
-        function switchMode(mode) {
-            const citizenView = document.getElementById('citizenView');
-            const adminView = document.getElementById('adminView');
-            const citBtn = document.getElementById('modeCitizenBtn');
-            const admBtn = document.getElementById('modeAdminBtn');
-
-            if (mode === 'citizen') {
-                citizenView.classList.remove('hidden');
-                adminView.classList.add('hidden');
-
-                citBtn.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 flex items-center gap-1.5 bg-gov-navy text-white shadow-sm";
-                admBtn.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 flex items-center gap-1.5 text-slate-600 hover:text-slate-900";
-            } else {
-                adminView.classList.remove('hidden');
-                citizenView.classList.add('hidden');
-
-                admBtn.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 flex items-center gap-1.5 bg-gov-navy text-white shadow-sm";
-                citBtn.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 flex items-center gap-1.5 text-slate-600 hover:text-slate-900";
-            }
-            renderAllViews();
-        }
-
-        function renderAllViews() {
-            renderCitizenRequests();
-            renderAdminRequests();
-            updateKPIsAndCharts();
-        }
-
-        // ================= CITIZEN VIEW RENDER =================
-        function renderCitizenRequests() {
-            const container = document.getElementById('citizenRequestList');
-            const filterStatus = document.getElementById('citizenFilterStatus').value;
-
-            // Filter for logged in citizen or show all if admin viewing
-            let userReqs = requests;
-            if (currentUser && currentUser.type === 'citizen') {
-                userReqs = requests.filter(r => r.citizenId === currentUser.username || r.citizenName === currentUser.name);
-            }
-
-            document.getElementById('citizenCountBadge').innerText = userReqs.length;
-
-            if (filterStatus !== 'ALL') {
-                userReqs = userReqs.filter(r => r.status === filterStatus);
-            }
-
-            if (userReqs.length === 0) {
-                container.innerHTML = `
-                    <div class="p-8 text-center text-slate-400">
-                        <i data-lucide="folder-check" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
-                        <p class="font-medium text-xs">No service filings match this filter.</p>
-                    </div>`;
-                lucide.createIcons();
-                return;
-            }
-
-            container.innerHTML = userReqs.map(req => {
-                const statusBadge = getStatusBadgeHTML(req.status);
-                const urgencyBadge = getUrgencyBadgeHTML(req.urgency);
-
-                return `
-                    <div class="p-5 hover:bg-slate-50 transition">
-                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-2">
-                            <div class="flex items-center gap-2">
-                                <span class="font-mono font-bold text-xs text-gov-navy bg-slate-100 px-2 py-0.5 rounded border border-slate-200">${req.id}</span>
-                                ${statusBadge}
-                                ${urgencyBadge}
-                            </div>
-                            <span class="text-[11px] text-slate-400 font-medium">${req.date}</span>
-                        </div>
-                        
-                        <h4 class="font-bold text-sm text-slate-800 mb-1">${escapeHtml(req.title)}</h4>
-                        <p class="text-xs text-slate-600 mb-3 leading-relaxed">${escapeHtml(req.description)}</p>
-
-                        <div class="flex flex-wrap items-center justify-between text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100 gap-2">
-                            <div class="flex items-center gap-3 flex-wrap">
-                                <span class="flex items-center gap-1 font-medium text-slate-700">
-                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-500"></i> ${escapeHtml(req.location)}
-                                </span>
-                                <span class="flex items-center gap-1 font-medium text-slate-700">
-                                    <i data-lucide="tag" class="w-3.5 h-3.5 text-blue-500"></i> ${escapeHtml(req.category)}
-                                </span>
-                                <span class="flex items-center gap-1 text-slate-500">
-                                    <i data-lucide="building" class="w-3.5 h-3.5 text-amber-500"></i> Assigned: <strong>${escapeHtml(req.department)}</strong>
-                                </span>
-                            </div>
-                        </div>
-
-                        ${req.comments && req.comments.length > 0 ? `
-                            <div class="mt-3 pt-2 border-t border-dashed border-slate-200 text-xs text-slate-600">
-                                <p class="font-semibold text-gov-navy flex items-center gap-1 mb-1">
-                                    <i data-lucide="message-square" class="w-3.5 h-3.5 text-gov-gold"></i> Official County Updates:
-                                </p>
-                                <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-600 pl-1">
-                                    ${req.comments.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
-                                </ul>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-
-            lucide.createIcons();
-        }
-
-        // ================= ADMIN VIEW RENDER =================
-        function renderAdminRequests() {
-            const tableBody = document.getElementById('adminTableBody');
-            const searchVal = document.getElementById('adminSearchInput').value.toLowerCase();
-            const filterCat = document.getElementById('adminFilterCategory').value;
-            const filterStat = document.getElementById('adminFilterStatus').value;
-            const filterUrg = document.getElementById('adminFilterUrgency').value;
-            const emptyState = document.getElementById('adminEmptyState');
-
-            let filtered = requests.filter(r => {
-                const matchSearch = r.id.toLowerCase().includes(searchVal) || 
-                                    r.title.toLowerCase().includes(searchVal) || 
-                                    r.citizenName.toLowerCase().includes(searchVal) || 
-                                    r.location.toLowerCase().includes(searchVal);
-                const matchCat = filterCat === 'ALL' || r.category === filterCat;
-                const matchStat = filterStat === 'ALL' || r.status === filterStat;
-                const matchUrg = filterUrg === 'ALL' || r.urgency === filterUrg;
-
-                return matchSearch && matchCat && matchStat && matchUrg;
-            });
-
-            if (filtered.length === 0) {
-                tableBody.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-            }
-
-            tableBody.innerHTML = filtered.map(req => {
-                return `
-                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
-                        <td class="p-3.5 whitespace-nowrap">
-                            <span class="font-mono font-bold text-gov-navy">${req.id}</span>
-                            <div class="text-[10px] text-slate-400 mt-0.5">${req.date}</div>
-                        </td>
-                        <td class="p-3.5 whitespace-nowrap">
-                            <div class="font-semibold text-slate-800">${escapeHtml(req.citizenName)}</div>
-                            <div class="text-[10px] text-slate-400">ID: ${req.citizenId}</div>
-                        </td>
-                        <td class="p-3.5">
-                            <div class="font-bold text-slate-800 line-clamp-1">${escapeHtml(req.title)}</div>
-                            <div class="text-[11px] text-slate-500">${escapeHtml(req.category)}</div>
-                        </td>
-                        <td class="p-3.5 font-medium text-slate-700 whitespace-nowrap">
-                            ${escapeHtml(req.location)}
-                        </td>
-                        <td class="p-3.5 whitespace-nowrap">
-                            ${getUrgencyBadgeHTML(req.urgency)}
-                        </td>
-                        <td class="p-3.5 whitespace-nowrap">
-                            ${getStatusBadgeHTML(req.status)}
-                        </td>
-                        <td class="p-3.5 text-slate-600 font-medium whitespace-nowrap">
-                            ${escapeHtml(req.department)}
-                        </td>
-                        <td class="p-3.5 text-right whitespace-nowrap">
-                            <button onclick="openAdminUpdateModal('${req.id}')" class="px-2.5 py-1.5 bg-gov-navy hover:bg-gov-navyLight text-white font-semibold rounded-lg text-xs transition flex items-center gap-1 ml-auto">
-                                <i data-lucide="sliders" class="w-3 h-3"></i> Triage
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            lucide.createIcons();
-        }
-
-        // ================= NEW TICKET FORM SUBMIT =================
-        function openNewRequestModal(presetCat) {
-            if (presetCat) {
-                document.getElementById('reqCategory').value = presetCat;
-            }
+        function openNewRequestModal() {
             document.getElementById('newRequestModal').classList.remove('hidden');
         }
 
         function closeNewRequestModal() {
             document.getElementById('newRequestModal').classList.add('hidden');
-            document.getElementById('requestForm').reset();
         }
 
-        function setPresetLocation() {
-            const locations = ["Kiharu Ward, Murang'a Town", "Maragua Sub-County Market", "Kangema Town Ward", "Kandara Highway Junction", "Mathioya Sub-County", "Gatanga Ward", "Makuyu Sub-County Center"];
-            const randomLoc = locations[Math.floor(Math.random() * locations.length)];
-            document.getElementById('reqLocation').value = randomLoc;
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-
-            const title = document.getElementById('reqTitle').value.trim();
+        function handleNewRequest(event) {
+            event.preventDefault();
             const category = document.getElementById('reqCategory').value;
-            const urgency = document.getElementById('reqUrgency').value;
             const location = document.getElementById('reqLocation').value.trim();
-            const description = document.getElementById('reqDescription').value.trim();
-            const photo = document.getElementById('reqPhoto').value.trim();
+            const urgency = document.getElementById('reqUrgency').value;
+            const description = document.getElementById('reqDesc').value.trim();
 
-            const newId = `MRG-2026-${Math.floor(100 + Math.random() * 900)}`;
-            const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const randomId = 'MRG-' + Math.floor(1000 + Math.random() * 9000);
+            const today = new Date().toISOString().split('T')[0];
 
-            const newReq = {
-                id: newId,
-                citizenName: currentUser ? currentUser.name : "Morris Kamande",
-                citizenId: currentUser ? currentUser.username : "28491032",
-                title: title,
+            const newTicket = {
+                id: randomId,
+                date: today,
+                citizen: `${currentUser.name} (ID: ${currentUser.id} | Tel: ${currentUser.phone})`,
                 category: category,
                 location: location,
                 urgency: urgency,
-                status: "Pending",
-                department: getDepartmentByCategory(category),
+                status: 'Pending',
                 description: description,
-                photoNote: photo || "N/A",
-                date: today,
-                comments: ["Submitted to County Public Service Portal. Awaiting officer triage."]
+                department: getDepartmentForCategory(category)
             };
 
-            requests.unshift(newReq);
-            saveRequestsToStorage();
+            requestsData = getStoredRequests();
+            requestsData.unshift(newTicket);
+            localStorage.setItem('muranga_requests', JSON.stringify(requestsData));
+
             closeNewRequestModal();
-            renderAllViews();
-
-            alert(`Service request ${newId} submitted successfully!`);
+            document.querySelector('#newRequestModal form').reset();
+            renderCitizenRequests();
+            alert(`Service request ${randomId} submitted successfully!`);
         }
 
-        // ================= ADMIN UPDATE MODAL =================
-        function openAdminUpdateModal(id) {
-            const req = requests.find(r => r.id === id);
-            if (!req) return;
-
-            document.getElementById('adminUpdateId').value = req.id;
-            document.getElementById('adminUpdateStatus').value = req.status;
-            document.getElementById('adminUpdateDept').value = req.department;
-            document.getElementById('adminUpdateComment').value = "";
-
-            document.getElementById('adminUpdateModal').classList.remove('hidden');
+        function getDepartmentForCategory(cat) {
+            switch(cat) {
+                case 'Streetlight': return 'Electrical Works';
+                case 'Water & Sanitation': return 'Water Services';
+                case 'Garbage Collection': return 'Waste Management';
+                case 'Road Damage': return 'Roads & Civil Works';
+                default: return 'Public Health Division';
+            }
         }
 
-        function closeAdminUpdateModal() {
-            document.getElementById('adminUpdateModal').classList.add('hidden');
-        }
+        function renderCitizenRequests() {
+            requestsData = getStoredRequests();
+            const container = document.getElementById('citizenRequestList');
+            const myRequests = requestsData.filter(r => r.citizen.includes(currentUser.id));
 
-        function handleAdminUpdateSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('adminUpdateId').value;
-            const status = document.getElementById('adminUpdateStatus').value;
-            const dept = document.getElementById('adminUpdateDept').value.trim();
-            const comment = document.getElementById('adminUpdateComment').value.trim();
-
-            const req = requests.find(r => r.id === id);
-            if (req) {
-                req.status = status;
-                req.department = dept;
-                if (comment) {
-                    const timestamp = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
-                    req.comments.unshift(`[${timestamp} County Update]: ${comment}`);
-                }
-                saveRequestsToStorage();
-                renderAllViews();
+            if (myRequests.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 py-6 text-center">You have not submitted any public service requests yet.</p>`;
+                return;
             }
 
-            closeAdminUpdateModal();
+            container.innerHTML = myRequests.map(req => `
+                <div class="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-gov-navy text-xs">${req.id}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${getStatusBadgeClass(req.status)}">${req.status}</span>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-800 mt-0.5">${req.category} — <span class="font-normal text-slate-600">${req.location}</span></p>
+                        <p class="text-[11px] text-slate-500 mt-1">${req.description}</p>
+                    </div>
+                    <div class="text-right text-[11px] text-slate-400">
+                        Submitted: ${req.date}
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // ================= ANALYTICS & CHARTS =================
-        function updateKPIsAndCharts() {
-            const total = requests.length;
-            const pending = requests.filter(r => r.status === 'Pending').length;
-            const inProgress = requests.filter(r => r.status === 'In Progress').length;
-            const resolved = requests.filter(r => r.status === 'Resolved').length;
-
-            document.getElementById('kpiTotal').innerText = total;
-            document.getElementById('kpiPending').innerText = pending;
-            document.getElementById('kpiInProgress').innerText = inProgress;
-            document.getElementById('kpiResolved').innerText = resolved;
-
-            // Compute category breakdown
-            const catCounts = {};
-            requests.forEach(r => {
-                catCounts[r.category] = (catCounts[r.category] || 0) + 1;
-            });
-
-            let topCat = "None";
-            let maxC = 0;
-            Object.keys(catCounts).forEach(c => {
-                if (catCounts[c] > maxC) {
-                    maxC = catCounts[c];
-                    topCat = c;
-                }
-            });
-            document.getElementById('topCategoryName').innerText = `${topCat} (${maxC} reports)`;
-
-            // Render Charts
-            renderStatusChart(pending, inProgress, resolved, requests.filter(r => r.status === 'Rejected').length);
-            renderCategoryChart(catCounts);
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'Pending': return 'bg-amber-100 text-amber-800';
+                case 'In Progress': return 'bg-blue-100 text-blue-800';
+                case 'Resolved': return 'bg-emerald-100 text-emerald-800';
+                default: return 'bg-rose-100 text-rose-800';
+            }
         }
 
-        function renderStatusChart(p, i, r, rej) {
-            const ctx = document.getElementById('statusChart').getContext('2d');
+        function initAdminDashboard() {
+            requestsData = getStoredRequests();
+            
+            document.getElementById('kpiTotal').textContent = requestsData.length;
+            document.getElementById('kpiPending').textContent = requestsData.filter(r => r.status === 'Pending').length;
+            document.getElementById('kpiInProgress').textContent = requestsData.filter(r => r.status === 'In Progress').length;
+            document.getElementById('kpiResolved').textContent = requestsData.filter(r => r.status === 'Resolved').length;
+
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = requestsData.map((req, index) => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3.5">
+                        <span class="font-bold text-gov-navy">${req.id}</span>
+                        <div class="text-[10px] text-slate-400">${req.date}</div>
+                    </td>
+                    <td class="p-3.5 font-medium text-slate-700">${req.citizen}</td>
+                    <td class="p-3.5">
+                        <div class="font-semibold text-slate-800">${req.category}</div>
+                        <div class="text-[10px] text-slate-500 truncate max-w-xs">${req.description}</div>
+                    </td>
+                    <td class="p-3.5 text-slate-600">${req.location}</td>
+                    <td class="p-3.5">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${req.urgency === 'High' ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'}">${req.urgency}</span>
+                    </td>
+                    <td class="p-3.5">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold ${getStatusBadgeClass(req.status)}">${req.status}</span>
+                    </td>
+                    <td class="p-3.5 text-right space-x-1">
+                        <button onclick="openAdminDetail(${index})" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-md">View</button>
+                        <button onclick="openAdminTriage(${index})" class="px-2.5 py-1 bg-gov-navy hover:bg-gov-navyLight text-white font-semibold rounded-md">Triage</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            renderAnalyticsCharts(requestsData);
+        }
+
+        function openAdminDetail(index) {
+            requestsData = getStoredRequests();
+            const req = requestsData[index];
+            const content = document.getElementById('adminModalContent');
+            content.innerHTML = `
+                <p><strong>Ticket ID:</strong> ${req.id}</p>
+                <p><strong>Date Filed:</strong> ${req.date}</p>
+                <p><strong>Citizen Details:</strong> ${req.citizen}</p>
+                <p><strong>Category:</strong> ${req.category}</p>
+                <p><strong>Sub-County Location:</strong> ${req.location}</p>
+                <p><strong>Urgency Level:</strong> ${req.urgency}</p>
+                <p><strong>Current Status:</strong> ${req.status}</p>
+                <p><strong>Assigned Department:</strong> ${req.department}</p>
+                <div class="bg-slate-50 p-3 rounded-lg border mt-2">
+                    <strong>Description:</strong><br>${req.description}
+                </div>
+            `;
+            document.getElementById('adminDetailModal').classList.remove('hidden');
+        }
+
+        function closeAdminDetailModal() {
+            document.getElementById('adminDetailModal').classList.add('hidden');
+        }
+
+        function openAdminTriage(index) {
+            requestsData = getStoredRequests();
+            const req = requestsData[index];
+            document.getElementById('triageTicketIndex').value = index;
+            document.getElementById('triageTicketId').value = req.id;
+            document.getElementById('triageStatusSelect').value = req.status;
+            document.getElementById('triageDepartmentSelect').value = req.department || 'Electrical Works';
+            document.getElementById('adminTriageModal').classList.remove('hidden');
+        }
+
+        function closeAdminTriageModal() {
+            document.getElementById('adminTriageModal').classList.add('hidden');
+        }
+
+        function handleTriageSubmit(event) {
+            event.preventDefault();
+            const index = document.getElementById('triageTicketIndex').value;
+            const newStatus = document.getElementById('triageStatusSelect').value;
+            const newDept = document.getElementById('triageDepartmentSelect').value;
+
+            requestsData = getStoredRequests();
+            requestsData[index].status = newStatus;
+            requestsData[index].department = newDept;
+
+            localStorage.setItem('muranga_requests', JSON.stringify(requestsData));
+
+            closeAdminTriageModal();
+            initAdminDashboard();
+            alert('Case triage updated and saved permanently!');
+        }
+
+        function renderAnalyticsCharts(data) {
+            const pendingCount = data.filter(r => r.status === 'Pending').length;
+            const progressCount = data.filter(r => r.status === 'In Progress').length;
+            const resolvedCount = data.filter(r => r.status === 'Resolved').length;
+
             if (statusChartInstance) statusChartInstance.destroy();
-
-            statusChartInstance = new Chart(ctx, {
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            statusChartInstance = new Chart(ctxStatus, {
                 type: 'bar',
                 data: {
-                    labels: ['Pending Triage', 'In Progress', 'Resolved', 'Rejected'],
+                    labels: ['Pending Triage', 'In Progress', 'Resolved'],
                     datasets: [{
-                        data: [p, i, r, rej],
-                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'],
+                        label: 'Ticket Volume',
+                        data: [pendingCount, progressCount, resolvedCount],
+                        backgroundColor: ['#d97706', '#2563eb', '#059669'],
                         borderRadius: 6
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { precision: 0 } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
-        }
 
-        function renderCategoryChart(catCounts) {
-            const ctx = document.getElementById('categoryChart').getContext('2d');
+            const categories = {};
+            data.forEach(r => {
+                categories[r.category] = (categories[r.category] || 0) + 1;
+            });
+
+            const topCat = Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b, 'None');
+            document.getElementById('topCategoryName').textContent = `${topCat} (${categories[topCat] || 0} reports)`;
+
             if (categoryChartInstance) categoryChartInstance.destroy();
-
-            const labels = Object.keys(catCounts);
-            const data = Object.values(catCounts);
-
-            categoryChartInstance = new Chart(ctx, {
+            const ctxCat = document.getElementById('categoryChart').getContext('2d');
+            categoryChartInstance = new Chart(ctxCat, {
                 type: 'doughnut',
                 data: {
-                    labels: labels.length ? labels : ['No Data'],
+                    labels: Object.keys(categories),
                     datasets: [{
-                        data: data.length ? data : [1],
-                        backgroundColor: ['#0b1f3a', '#c59b27', '#059669', '#3b82f6', '#8b5cf6', '#ec4899']
+                        data: Object.values(categories),
+                        backgroundColor: ['#0b1f3a', '#c59b27', '#059669', '#2563eb', '#7c3aed']
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
-        }
-
-        // ================= HELPERS & UTILS =================
-        function getDepartmentByCategory(cat) {
-            switch(cat) {
-                case 'Streetlight': return 'Public Utilities Division';
-                case 'Water & Sanitation': return 'MUWASCO Water Co.';
-                case 'Garbage Collection': return 'County Environment Dept';
-                case 'Road Damage': return 'Murang\'a Roads & Transport';
-                case 'Public Health': return 'County Health Services';
-                case 'Parks & Recreation': return 'Urban Planning & Greenery';
-                default: return 'County Public Works';
-            }
-        }
-
-        function getStatusBadgeHTML(status) {
-            switch(status) {
-                case 'Pending':
-                    return `<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-200">Pending</span>`;
-                case 'In Progress':
-                    return `<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-200">In Progress</span>`;
-                case 'Resolved':
-                    return `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">Resolved</span>`;
-                case 'Rejected':
-                    return `<span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-rose-200">Rejected</span>`;
-                default:
-                    return `<span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">${status}</span>`;
-            }
-        }
-
-        function getUrgencyBadgeHTML(urgency) {
-            switch(urgency) {
-                case 'High':
-                    return `<span class="bg-rose-50 text-rose-600 text-[10px] font-semibold px-2 py-0.5 rounded border border-rose-200">High Urgency</span>`;
-                case 'Medium':
-                    return `<span class="bg-amber-50 text-amber-600 text-[10px] font-semibold px-2 py-0.5 rounded border border-amber-200">Medium</span>`;
-                case 'Low':
-                    return `<span class="bg-slate-100 text-slate-600 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-200">Low</span>`;
-                default:
-                    return '';
-            }
-        }
-
-        function toggleDocs() {
-            document.getElementById('docsModal').classList.toggle('hidden');
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
     </script>
 </body>
